@@ -1,11 +1,12 @@
 package com.mossman.darren.adventofcode.Y2K16;
 
+import com.mossman.darren.adventofcode.InfiniteGrid;
 import com.mossman.darren.adventofcode.MovingObject;
+import com.mossman.darren.adventofcode.MovingObject.Direction;
 import com.mossman.darren.adventofcode.Utils;
 import com.mossman.darren.adventofcode.Y2K18.Y2K18_Puzzle;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Y2K16_1 extends Y2K18_Puzzle {
 
@@ -48,15 +49,13 @@ public class Y2K16_1 extends Y2K18_Puzzle {
     }
 
     public int run(boolean part2) {
-        HashMap<Integer, HashMap<Integer, Boolean>> locs = null;
+        InfiniteGrid<Boolean> locs = null;
         if (part2) {
-            locs = new HashMap<>();
-            HashMap<Integer, Boolean> row = new HashMap<>();
-            locs.put(0, row);
-            row.put(0, true);
+            locs = new InfiniteGrid<>();
+            locs.put(0, 0, true);
         }
 
-        MovingObject me = new MovingObject(0,0, MovingObject.Direction.up);
+        MovingObject me = new MovingObject(0,0, Direction.up);
         for (String s: directions) {
             char c = s.charAt(0);
             int blocks = Integer.parseInt(s.substring(1));
@@ -70,16 +69,11 @@ public class Y2K16_1 extends Y2K18_Puzzle {
             if (part2) {
                 for (int i = 0 ; i < blocks; i++) {
                     me.advance();
-                    HashMap<Integer, Boolean> row = locs.get(me.y);
-                    if (row == null) {
-                        row = new HashMap<>();
-                        locs.put(me.y, row);
+                    if (locs.contains(me.x, me.y)) {
+                        return me.manhattenDistance();
                     } else {
-                        if (row.get(me.x) != null) {
-                            return me.manhattenDistance();
-                        }
+                        locs.put(me.x, me.y, true);
                     }
-                    row.put(me.x, true);
                 }
             } else {
                 me.advance(blocks);
