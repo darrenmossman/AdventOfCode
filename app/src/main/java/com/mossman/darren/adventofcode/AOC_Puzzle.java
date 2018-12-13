@@ -1,5 +1,6 @@
 package com.mossman.darren.adventofcode;
 
+import com.mossman.darren.adventofcode.Y2K16.Y2K16_Puzzle;
 import com.mossman.darren.adventofcode.Y2K17.Y2K17_Puzzle;
 import com.mossman.darren.adventofcode.Y2K18.Y2K18_Puzzle;
 
@@ -7,6 +8,7 @@ public abstract class AOC_Puzzle {
 
     public static void main(String[] args) {
 
+        Y2K16_Puzzle.main(null);
         Y2K17_Puzzle.main(null);
         Y2K18_Puzzle.main(null);
     }

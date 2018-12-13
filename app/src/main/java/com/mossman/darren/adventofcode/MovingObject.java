@@ -28,19 +28,31 @@ public class MovingObject {
     }
 
     public void advance() {
+        advance(1);
+    }
+
+    public void advance(int steps) {
         switch (dir) {
             case up:
-                y--;
+                y-=steps;
                 break;
             case right:
-                x++;
+                x+=steps;
                 break;
             case down:
-                y++;
+                y+=steps;
                 break;
             case left:
-                x--;
+                x-=steps;
                 break;
         }
+    }
+
+    public double distance() {
+        return Math.sqrt(x*x + y*y);
+    }
+
+    public int manhattenDistance() {
+        return Math.abs(x) + Math.abs(y);
     }
 }

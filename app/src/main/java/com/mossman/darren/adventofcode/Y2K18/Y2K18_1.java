@@ -29,7 +29,6 @@ public class Y2K18_1 extends Y2K18_Puzzle {
         freq = Utils.strArrayToNum(input);
     }
 
-    // region day1
     public int part1() {
         // sum frequency
         int sum = 0;
@@ -54,6 +53,5 @@ public class Y2K18_1 extends Y2K18_Puzzle {
             }
         }
     }
-    // endregion
 
 }
