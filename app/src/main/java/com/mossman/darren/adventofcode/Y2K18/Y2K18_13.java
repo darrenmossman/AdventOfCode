@@ -1,5 +1,7 @@
 package com.mossman.darren.adventofcode.Y2K18;
 
+import com.mossman.darren.adventofcode.MovingObject;
+import com.mossman.darren.adventofcode.MovingObject.Direction;
 import com.mossman.darren.adventofcode.Utils;
 
 import java.util.ArrayList;
@@ -30,9 +32,6 @@ public class Y2K18_13 extends Y2K18_Puzzle {
 
     //--------------------------------------------------------------------------------------------
 
-    enum Direction {up, right, down, left};
-    Direction[] dirs = Direction.values();
-
     private char[][] grid;
     private HashMap<Character, Direction> dirMap;
     private ArrayList<Cart> carts;
@@ -56,16 +55,12 @@ public class Y2K18_13 extends Y2K18_Puzzle {
         return run(false);
     }
 
-    private class Cart {
-        private int x, y;
-        private Direction dir;
+    private class Cart extends MovingObject {
         private Direction nextDir = Direction.left;;
         private boolean removePending = false;
 
         private Cart(int x, int y, Direction dir) {
-            this.x = x;
-            this.y = y;
-            this.dir = dir;
+            super(x,y,dir);
         }
 
         @Override
@@ -73,32 +68,7 @@ public class Y2K18_13 extends Y2K18_Puzzle {
             return String.format("%d,%d", x, y);
         }
 
-        private void turnLeft() {
-            dir = dirs[dir.ordinal() == 0 ? dirs.length - 1 : dir.ordinal() - 1];
-        }
-
-        private void turnRight() {
-            dir = dirs[(dir.ordinal() + 1) % dirs.length];
-        }
-
-        private void advance() {
-            switch (dir) {
-                case up:
-                    y--;
-                    break;
-                case right:
-                    x++;
-                    break;
-                case down:
-                    y++;
-                    break;
-                case left:
-                    x--;
-                    break;
-            }
-        }
-
-        private void turn(char c) {
+        private void react(char c) {
             switch(c) {
                 case '/':
                     if (dir == Direction.up || dir == Direction.down) {
@@ -177,7 +147,7 @@ public class Y2K18_13 extends Y2K18_Puzzle {
                 }
                 if (!collision) {
                     char c = grid[cart.y][cart.x];
-                    cart.turn(c);
+                    cart.react(c);
                 }
             }
             if (part2) {

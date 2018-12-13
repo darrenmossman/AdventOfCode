@@ -1,5 +1,6 @@
 package com.mossman.darren.adventofcode.Y2K17;
 
+import com.mossman.darren.adventofcode.MovingObject;
 import com.mossman.darren.adventofcode.Utils;
 
 import java.util.ArrayList;
@@ -33,46 +34,31 @@ public class Y2K17_22 extends Y2K17_Puzzle {
 
     //--------------------------------------------------------------------------------------------
 
-
     ArrayList<String> input;
     HashMap<Integer, HashMap<Integer, Character>> grid;
-
-    enum Direction {up, right, down, left};
-    Direction[] dirs = Direction.values();
 
     public Y2K17_22(boolean test) {
         input = Utils.readFile(getFilename(test));
     }
 
-    private Direction turnRight(Direction dir) {
-        return dirs[(dir.ordinal()+1) % dirs.length];
-    }
-    private Direction reverse(Direction dir) {
-        return dirs[(dir.ordinal()+2) % dirs.length];
-    }
-    private Direction turnLeft(Direction dir) {
-        return dirs[dir.ordinal() == 0 ? dirs.length-1 : dir.ordinal()-1];
-    }
-
-    private Character get(int r, int c) {
-        HashMap<Integer, Character> row = grid.get(r);
+    private Character get(int x, int y) {
+        HashMap<Integer, Character> row = grid.get(y);
         if (row == null) {
             row = new HashMap<>();
-            grid.put(r, row);
+            grid.put(y, row);
         }
-        Character node = row.get(c);
+        Character node = row.get(x);
         if (node == null) {
             node = '.';
-            row.put(c, node);
+            row.put(x, node);
         }
         return node;
     }
 
-    private void put(int r, int c, Character node) {
-        HashMap<Integer, Character> row = grid.get(r);
-        row.put(c, node);
+    private void put(int x, int y, Character node) {
+        HashMap<Integer, Character> row = grid.get(y);
+        row.put(x, node);
     }
-
 
     private void init() {
         grid = new HashMap<>();
@@ -90,65 +76,68 @@ public class Y2K17_22 extends Y2K17_Puzzle {
         return run(iterations, false);
     }
 
+    private class Virus extends MovingObject {
+        private boolean part2;
+        public Virus(boolean part2, int x, int y, Direction dir) { 
+            super(x,y,dir);
+            this.part2 = part2;
+        }
+
+        private boolean react(char c) {
+            boolean infected = false;
+            if (part2) {
+                switch (c) {
+                    case '.':
+                        turnLeft();
+                        put(x, y, 'W');
+                        break;
+                    case 'W':
+                        infected = true;
+                        put(x, y, '#');
+                        break;
+                    case '#':
+                        turnRight();
+                        put(x, y, 'F');
+                        break;
+                    case 'F':
+                        reverse();
+                        put(x, y, '.');
+                        break;
+                }
+            } else {
+                switch (c) {
+                    case '.':
+                        turnLeft();
+                        infected = true;
+                        put(x, y, '#');
+                        break;
+                    case '#':
+                        turnRight();
+                        put(x, y, '.');
+                        break;
+                }
+            }
+            return infected;
+        }
+    }
+
     public int run(int iterations, boolean part2) {
         init();
 
         HashMap<Integer, Character> row = grid.get(0);
-        int r = grid.size() / 2;
-        int c = row.size() / 2;
-        Direction dir = Direction.up;
+
+        int x = row.size() / 2;
+        int y = grid.size() / 2;
+        Virus virus = new Virus(part2, x, y, MovingObject.Direction.up);
 
         int res = 0;
         for (int i = 0; i < iterations; i++) {
-            Character node = get(r, c);
-            if (part2) {
-                switch (node) {
-                    case '.':
-                        dir = turnLeft(dir);
-                        put(r, c, 'W');
-                        break;
-                    case 'W':
-                        res++;
-                        put(r, c, '#');
-                        break;
-                    case '#':
-                        dir = turnRight(dir);
-                        put(r, c, 'F');
-                        break;
-                    case 'F':
-                        dir = reverse(dir);
-                        put(r, c, '.');
-                        break;
-                }
-            } else {
-                switch (node) {
-                    case '.':
-                        dir = turnLeft(dir);
-                        res++;
-                        put(r, c, '#');
-                        break;
-                    case '#':
-                        dir = turnRight(dir);
-                        put(r, c, '.');
-                        break;
-                }
+            Character node = get(virus.x, virus.y);
+            if (virus.react(node)) {
+                res++;
             }
-            switch (dir) {
-                case up:
-                    r--;
-                    break;
-                case right:
-                    c++;
-                    break;
-                case down:
-                    r++;
-                    break;
-                case left:
-                    c--;
-                    break;
-            }
+            virus.advance();
         }
         return res;
     }
-
 }
