@@ -55,7 +55,7 @@ public class Y2K18_13 extends Y2K18_Puzzle {
         return run(false);
     }
 
-    private class Cart extends MovingObject {
+    private static class Cart extends MovingObject {
         private Direction nextDir = Direction.left;;
         private boolean removePending = false;
 

@@ -76,7 +76,7 @@ public class Y2K17_22 extends Y2K17_Puzzle {
         return run(iterations, false);
     }
 
-    private class Virus extends MovingObject {
+    private static class Virus extends MovingObject {
         private boolean part2;
         public Virus(boolean part2, int x, int y, Direction dir) { 
             super(x,y,dir);
