@@ -45,7 +45,12 @@ public abstract class AOC_Puzzle {
     public String getFilename(boolean test) {
         //String user_dir = System.getProperty("user.dir");
 
-        String filename = "resources/" + getClass().getSimpleName();
+        String className = getClass().getSimpleName();
+        String path = className;
+        if (path.contains("_")) {
+            path = path.substring(0, path.indexOf("_"));
+        }
+        String filename = "resources/" + path + "/" + className;
         if (test) filename += "_test";
         filename += ".txt";
         return filename;
