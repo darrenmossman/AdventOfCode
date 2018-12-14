@@ -1,5 +1,6 @@
 package com.mossman.darren.adventofcode.Y2K17;
 
+import com.mossman.darren.adventofcode.InfiniteGrid;
 import com.mossman.darren.adventofcode.MovingObject;
 import com.mossman.darren.adventofcode.Utils;
 
@@ -35,39 +36,18 @@ public class Y2K17_22 extends Y2K17_Puzzle {
     //--------------------------------------------------------------------------------------------
 
     ArrayList<String> input;
-    HashMap<Integer, HashMap<Integer, Character>> grid;
+    InfiniteGrid<Character> grid;
 
     public Y2K17_22(boolean test) {
         input = Utils.readFile(getFilename(test));
     }
 
-    private Character get(int x, int y) {
-        HashMap<Integer, Character> row = grid.get(y);
-        if (row == null) {
-            row = new HashMap<>();
-            grid.put(y, row);
-        }
-        Character node = row.get(x);
-        if (node == null) {
-            node = '.';
-            row.put(x, node);
-        }
-        return node;
-    }
-
-    private void put(int x, int y, Character node) {
-        HashMap<Integer, Character> row = grid.get(y);
-        row.put(x, node);
-    }
-
     private void init() {
-        grid = new HashMap<>();
+        grid = new InfiniteGrid('.');
         for (int r = 0; r < input.size(); r++) {
             String s = input.get(r);
-            HashMap<Integer, Character> row = new HashMap<>();
-            grid.put(r, row);
             for (int c = 0; c < s.length(); c++) {
-                row.put(c, s.charAt(c));
+                grid.put(c,r, s.charAt(c));
             }
         }
     }
@@ -89,19 +69,19 @@ public class Y2K17_22 extends Y2K17_Puzzle {
                 switch (c) {
                     case '.':
                         turnLeft();
-                        put(x, y, 'W');
+                        grid.put(x, y, 'W');
                         break;
                     case 'W':
                         infected = true;
-                        put(x, y, '#');
+                        grid.put(x, y, '#');
                         break;
                     case '#':
                         turnRight();
-                        put(x, y, 'F');
+                        grid.put(x, y, 'F');
                         break;
                     case 'F':
                         reverse();
-                        put(x, y, '.');
+                        grid.put(x, y, '.');
                         break;
                 }
             } else {
@@ -109,11 +89,11 @@ public class Y2K17_22 extends Y2K17_Puzzle {
                     case '.':
                         turnLeft();
                         infected = true;
-                        put(x, y, '#');
+                        grid.put(x, y, '#');
                         break;
                     case '#':
                         turnRight();
-                        put(x, y, '.');
+                        grid.put(x, y, '.');
                         break;
                 }
             }
@@ -124,7 +104,7 @@ public class Y2K17_22 extends Y2K17_Puzzle {
     public int run(int iterations, boolean part2) {
         init();
 
-        HashMap<Integer, Character> row = grid.get(0);
+        HashMap<Integer, Character> row = grid.getRow(0);
 
         int x = row.size() / 2;
         int y = grid.size() / 2;
@@ -132,7 +112,7 @@ public class Y2K17_22 extends Y2K17_Puzzle {
 
         int res = 0;
         for (int i = 0; i < iterations; i++) {
-            Character node = get(virus.x, virus.y);
+            Character node = grid.get(virus.x, virus.y);
             if (virus.react(node)) {
                 res++;
             }

@@ -1,5 +1,6 @@
 package com.mossman.darren.adventofcode.Y2K18;
 
+import com.mossman.darren.adventofcode.InfiniteGrid;
 import com.mossman.darren.adventofcode.Utils;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class Y2K18_6 extends Y2K18_Puzzle {
     }
     
     public int run(Integer safeDist) {
-        HashMap<Integer, HashMap<Integer, Character>> grid = new HashMap<>();
+        //InfiniteGrid<Character> grid = new InfiniteGrid<>();
         HashMap<Character, Coord> coords = new HashMap<>(vals.size());
 
         char id = 'A';
@@ -51,7 +52,7 @@ public class Y2K18_6 extends Y2K18_Puzzle {
             int y = arr[1];
             Coord coord = new Coord(x, y, id);
             coords.put(id, coord);
-            //setLocation(grid, x, y, id);
+            //grid.put(x, y, id);
             if (xmin == null) {
                 xmin = x; xmax = x; ymin = y; ymax = y;
             } else {
@@ -103,7 +104,7 @@ public class Y2K18_6 extends Y2K18_Puzzle {
                             closest.infinite = true;
                         }
                     }
-                    //setLocation(grid, x, y, c);
+                    //grid.put(x, y, id);
                 }
             }
         }
@@ -140,18 +141,4 @@ public class Y2K18_6 extends Y2K18_Puzzle {
         }
     }
 
-    static Character getLocation(HashMap<Integer, HashMap<Integer, Character>> grid, int x, int y) {
-        HashMap<Integer, Character> row = grid.get(y);
-        if (row == null) return null;
-        else return row.get(x);
-    }
-
-    static void setLocation(HashMap<Integer, HashMap<Integer, Character>> grid, int x, int y, char id) {
-        HashMap<Integer, Character> row = grid.get(y);
-        if (row == null) {
-            row = new HashMap<>();
-        }
-        row.put(x, id);
-    }
-    
 }

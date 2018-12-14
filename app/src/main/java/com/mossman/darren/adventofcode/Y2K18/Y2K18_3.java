@@ -1,5 +1,6 @@
 package com.mossman.darren.adventofcode.Y2K18;
 
+import com.mossman.darren.adventofcode.InfiniteGrid;
 import com.mossman.darren.adventofcode.Utils;
 
 import java.util.ArrayList;
@@ -46,20 +47,13 @@ public class Y2K18_3 extends Y2K18_Puzzle {
     }
 
     public int part1() {
-        HashMap<Integer, HashMap<Integer, Integer>> fabric = new HashMap<>();
+        InfiniteGrid<Integer> fabric = new InfiniteGrid<>();
 
-        fabric = new HashMap<>();
         for (String s: input) {
             Claim claim = new Claim(s);
             for (int y = claim.t; y < claim.t+claim.h; y++) {
-                HashMap<Integer, Integer> row = fabric.get(y);
-                if (row == null) {
-                    row = new HashMap<>();
-                    fabric.put(y, row);
-                }
                 for (int x = claim.l; x < claim.l+claim.w; x++) {
-                    Integer val = row.get(x);
-                    row.put(x, val == null ? 1 : val+1);
+                    fabric.inc(x, y, 1);
                 }
             }
         }
@@ -75,23 +69,18 @@ public class Y2K18_3 extends Y2K18_Puzzle {
     }
 
     public int part2() {
-        HashMap<Integer, HashMap<Integer, ArrayList<Claim>>> fabric = new HashMap<>();
+        InfiniteGrid<ArrayList<Claim>> fabric = new InfiniteGrid<>();
         ArrayList<Claim> allClaims = new ArrayList<>(input.size());
 
         for (String s: input) {
             Claim claim = new Claim(s);
             allClaims.add(claim);
             for (int y = claim.t; y < claim.t+claim.h; y++) {
-                HashMap<Integer, ArrayList<Claim>> row = fabric.get(y);
-                if (row == null) {
-                    row = new HashMap<>();
-                    fabric.put(y, row);
-                }
                 for (int x = claim.l; x < claim.l+claim.w; x++) {
-                    ArrayList<Claim> claims = row.get(x);
+                    ArrayList<Claim> claims = fabric.get(x, y);
                     if (claims == null) {
                         claims = new ArrayList<>();
-                        row.put(x, claims);
+                        fabric.put(x, y, claims);
                     }
                     claims.add(claim);
                 }
