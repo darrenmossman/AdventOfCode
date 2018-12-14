@@ -44,7 +44,10 @@ public class Utils {
         ArrayList<String[]> res = new ArrayList<>(input.size());
         for (String s: input) {
             if (sep.equals(" ")) {
-                s = s.replaceAll("  ", " ");
+                while (s.contains("  ")) {
+                    s = s.replaceAll("  ", " ");
+                }
+                s = s.trim();
             }
             String[] arr = s.split(sep);
             res.add(arr);
