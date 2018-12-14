@@ -82,11 +82,11 @@ public class Y2K16_4 extends Y2K18_Puzzle {
                         if (c == '-') {
                             c = ' ';
                         } else {
-                            int i = Character.valueOf(c);
-                            i -= Character.valueOf('a');
+                            int i = (int)c;
+                            i -= 'a';
                             i = (i + sectorid) % 26;
-                            i += Character.valueOf('a');
-                            c = (char) i;
+                            i += 'a';
+                            c = (char)i;
                         }
                         builder.append(c);
                     }
