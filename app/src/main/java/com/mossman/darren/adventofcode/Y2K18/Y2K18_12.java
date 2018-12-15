@@ -49,10 +49,11 @@ public class Y2K18_12 extends Y2K18_Puzzle {
     }
 
     public long run(long generations, boolean part2) {
-        // After 100 generations result increases by fixed amount
-        if (part2 && generations > 100) {
-            long fixed = run(101) - run(100);
-            long res = run(100) + (generations-100) * fixed;
+        // After 200 generations result increases by fixed amount.
+        // Should probably scan for when this occurs, rather than picking arbitrary value
+        if (part2 && generations > 200) {
+            long fixed = run(201) - run(200);
+            long res = run(200) + (generations-200) * fixed;
             return res;
         }
 
