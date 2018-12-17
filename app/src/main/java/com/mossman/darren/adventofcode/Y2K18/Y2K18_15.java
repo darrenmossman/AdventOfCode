@@ -5,6 +5,7 @@ import com.mossman.darren.adventofcode.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,59 +17,81 @@ public class Y2K18_15 extends Y2K18_Puzzle {
     public static void main(String[] args) {
         int i;
         Y2K18_15 puzzle;
-        Date dt1, dt0 = new Date();
 
         puzzle = new Y2K18_15(true);
-        i = puzzle.run();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        i = puzzle.part1();
         test(i, 27730);
 
+        i = puzzle.part2();
+        test(i, 4988);
+
+        //--------------------------------------------------------------------------------------
+
         puzzle = new Y2K18_15(true, 1);
-        i = puzzle.run();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        i = puzzle.part1();
         test(i, 36334);
 
+        //--------------------------------------------------------------------------------------
+
         puzzle = new Y2K18_15(true, 2);
-        i = puzzle.run();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        i = puzzle.part1();
         test(i, 39514);
 
+        i = puzzle.part2();
+        test(i, 31284);
+
+        //--------------------------------------------------------------------------------------
+
         puzzle = new Y2K18_15(true, 3);
-        i = puzzle.run();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        i = puzzle.part1();
         test(i, 27755);
 
+        i = puzzle.part2();
+        test(i, 3478);
+
+        //--------------------------------------------------------------------------------------
+
         puzzle = new Y2K18_15(true, 4);
-        i = puzzle.run();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        i = puzzle.part1();
         test(i, 28944);
 
+        i = puzzle.part2();
+        test(i, 6474);
+
+        //--------------------------------------------------------------------------------------
+
         puzzle = new Y2K18_15(true, 5);
-        i = puzzle.run();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        i = puzzle.part1();
         test(i, 18740);
 
+        i = puzzle.part2();
+        test(i, 1140);
+
+        //--------------------------------------------------------------------------------------
+
+/*
         puzzle = new Y2K18_15(false, 1);
-        i = puzzle.run();
+        i = puzzle.part1();
         dt1 = new Date();
         System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
         test(i, 245280);
 
-        puzzle = new Y2K18_15(false, 0);
-        i = puzzle.run();
+        i = puzzle.part2();
         dt1 = new Date();
         System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
+        System.out.printf("day 15: part 2 = %d\n", i);
+        test(i, 74984);
+*/
+
+        puzzle = new Y2K18_15(false, 0);
+        i = puzzle.part1();
+        System.out.printf("day 15: part 1 = %d\n", i);
         test(i, 243390);
 
-        //i = puzzle.run(true);
-        //System.out.printf("day 15: part 2 = %d\n", i);
-        //test(i, 0);
+        i = puzzle.part2();
+        System.out.printf("day 15: part 2 = %d\n", i);
+        // Part 2 is failing. Assume algorithm in part 1 has error which is only exercised with higher Elf hitpoints
+        test(i, 0);
     }
 
     //--------------------------------------------------------------------------------------------
@@ -88,16 +111,22 @@ public class Y2K18_15 extends Y2K18_Puzzle {
         input = Utils.readFile(filename);
     }
 
-    public Integer run() {
-        return run(false);
+    public Integer part1() {
+        return part1(false, false);
+    }
+    public Integer part2() {
+        return part2(false);
     }
 
+
     public enum Type {Elf, Goblin};
+    private int elfAttackPower = 3;
+    final static private int goblinAttachPower = 3;
 
     private class Unit implements Comparable<Unit>{
         Type type;
         int x, y;
-        int attackPower = 3;
+        int attackPower;
         int hitPoints = 200;
         Unit attackTarget;
         Node shortestPath;
@@ -107,6 +136,11 @@ public class Y2K18_15 extends Y2K18_Puzzle {
             this.type = type == 'E' ? Elf : Goblin;
             this.x = x;
             this.y = y;
+            if (this.type == Elf) {
+                attackPower = elfAttackPower;
+            } else {
+                attackPower = goblinAttachPower;
+            }
         }
 
         public int compareTo(Unit other) {
@@ -278,23 +312,13 @@ public class Y2K18_15 extends Y2K18_Puzzle {
         }
 
         private void moveTowards(Node node, boolean debug) {
-/*
-            Node first = null;
-            while (node.previous != null) {
-                first = node;
-                node = node.previous;
-            }
-*/
-            Node first = node;
-            while (first.previous != null) {
-                first = first.previous;
-            }
+            Node start = node.reversePath();
             if (debug) {
-                System.out.printf("%s moving to (x: %d, y: %d)\n", this.toLocation(), first.x, first.y);
+                System.out.printf("%s moving to (x: %d, y: %d)\n", this.toLocation(), start.x, start.y);
             }
             map[y][x] = '.';
-            x = first.x;
-            y = first.y;
+            x = start.x;
+            y = start.y;
             map[y][x] = typeChar();
         }
 
@@ -305,7 +329,6 @@ public class Y2K18_15 extends Y2K18_Puzzle {
             }
             return targets;
         }
-
     }
 
     private class Node implements Comparable<Node> {
@@ -348,7 +371,6 @@ public class Y2K18_15 extends Y2K18_Puzzle {
             }
             return res;
         }
-
     }
 
     private String getMap() {
@@ -379,7 +401,44 @@ public class Y2K18_15 extends Y2K18_Puzzle {
         System.out.println();
     }
 
-    public Integer run(boolean debug) {
+    public Integer part2(boolean debug) {
+        int minPower = 4;
+        int maxPower = 100;
+        HashMap<Integer, Integer> score = new HashMap<>();
+        int res = 0;
+        Integer minSuccess = null;
+        while (maxPower - minPower > 1) {
+            elfAttackPower = (maxPower + minPower) / 2;
+            int sc = part1(debug, true);
+            score.put(elfAttackPower, sc);
+            if (sc > 0) {
+                if (minSuccess == null || elfAttackPower < minSuccess) {
+                    res = sc;
+                    minSuccess = elfAttackPower;
+                }
+                maxPower = elfAttackPower;
+            } else {
+                minPower = elfAttackPower;
+            }
+        }
+        if (score.get(minPower) == null) {
+            elfAttackPower = minPower;
+            int sc = part1(debug, true);
+            if (sc > 0) {
+                if (minSuccess == null || elfAttackPower < minSuccess) {
+                    res = sc;
+                    minSuccess = elfAttackPower;
+                }
+            }
+        }
+        System.out.printf("Minimum Elf attack power = %d\n", minSuccess);
+        return res;
+    }
+
+    public Integer part1(boolean debug, boolean part2) {
+        if (part2) {
+            System.out.printf("Elf attack power = %d\n", elfAttackPower);
+        }
 
         map = new char[input.size()][];
         for (int i = 0; i < input.size(); i++) {
@@ -448,16 +507,34 @@ public class Y2K18_15 extends Y2K18_Puzzle {
                     if (debug) System.out.printf("%s cannot move...\n", unit.toLocation());
                 }
             }
-            int cnt = units.size();
+            int elfCount = 0, goblinCount = 0;
+            for (Unit unit: units) {
+                if (unit.type == Goblin) goblinCount++;
+                else elfCount++;
+            }
+
             Iterator<Unit> itr = units.iterator();
             while (itr.hasNext()) {
                 Unit unit = itr.next();
-                if (unit.isDead) itr.remove();
+                if (unit.isDead) {
+                    itr.remove();
+                    if (part2 && unit.type == Elf) {
+                        System.out.println("Elf dies!");
+                        return 0;
+                    }
+                }
             }
-            if (units.size() < cnt) {
-                System.out.printf("%d ", units.size());
+
+            int newElfCount = 0, newGoblinCount = 0;
+            for (Unit unit: units) {
+                if (unit.type == Goblin) newGoblinCount++;
+                else newElfCount++;
+            }
+
+            if (newElfCount != elfCount || newGoblinCount != goblinCount) {
+                System.out.printf(" %d/%d ", newElfCount, newGoblinCount);
             } else {
-                System.out.printf(". ");
+                System.out.printf(".");
             }
 
             if (noTargets) {
@@ -481,7 +558,11 @@ public class Y2K18_15 extends Y2K18_Puzzle {
             res += unit.hitPoints;
         }
         res *= round;
-        System.out.println();
+        if (part2) {
+            System.out.println("No elves died");
+        } else {
+            System.out.println();
+        }
         return res;
     }
 }
