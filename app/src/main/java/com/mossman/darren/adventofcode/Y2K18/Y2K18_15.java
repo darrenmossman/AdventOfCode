@@ -235,18 +235,18 @@ public class Y2K18_15 extends Y2K18_Puzzle {
             int tx, ty, xx, yy;
 
             ArrayList<Node> adjacents = new ArrayList<>();
-            xx = this.x; yy = this.y-1;
+            xx = this.x; yy = this.y-1;             // above unit
             if (map[yy][xx] == '.') adjacents.add(new Node(xx, yy));
-            xx = this.x-1; yy = this.y;
+            xx = this.x-1; yy = this.y;             // left of unit
             if (map[yy][xx] == '.') adjacents.add(new Node(xx, yy));
-            xx = this.x+1; yy = this.y;
+            xx = this.x+1; yy = this.y;             // right of unit
             if (map[yy][xx] == '.') adjacents.add(new Node(xx, yy));
-            xx = this.x; yy = this.y+1;
+            xx = this.x; yy = this.y+1;             // below unit
             if (map[yy][xx] == '.') adjacents.add(new Node(xx, yy));
 
             if (adjacents.size() == 0) return null;
 
-            tx = target.x; ty = target.y - 1;       // up
+            tx = target.x; ty = target.y - 1;       // above target
             if (map[ty][tx] == '.') {
                 for (Node nd: adjacents) {
                     Node node = getPath(tx, ty, nd.x, nd.y, shortestPath);
@@ -256,7 +256,7 @@ public class Y2K18_15 extends Y2K18_Puzzle {
                     }
                 }
             }
-            tx = target.x-1; ty = target.y;         // left
+            tx = target.x-1; ty = target.y;         // left of target
             if (map[ty][tx] == '.') {
                 for (Node nd: adjacents) {
                     Node node = getPath(tx, ty, nd.x, nd.y, shortestPath);
@@ -266,7 +266,7 @@ public class Y2K18_15 extends Y2K18_Puzzle {
                     }
                 }
             }
-            tx = target.x+1; ty = target.y;         // right
+            tx = target.x+1; ty = target.y;         // right of target
             if (map[ty][tx] == '.') {
                 for (Node nd: adjacents) {
                     Node node = getPath(tx, ty, nd.x, nd.y, shortestPath);
@@ -276,7 +276,7 @@ public class Y2K18_15 extends Y2K18_Puzzle {
                     }
                 }
             }
-            tx = target.x; ty = target.y+1;         // down
+            tx = target.x; ty = target.y+1;         // below target
             if (map[ty][tx] == '.') {
                 for (Node nd: adjacents) {
                     Node node = getPath(tx, ty, nd.x, nd.y, shortestPath);
