@@ -40,7 +40,14 @@ public class InfiniteGrid<T> {
     private int py;
     private HashMap<Integer, T> putRow = null;
 
+    public Integer minx = null, maxx = null, miny = null, maxy = null;
+
     public void put(int x, int y, T value) {
+        if (minx == null || x < minx) minx = x;
+        if (maxx == null || x > maxx) maxx = x;
+        if (miny == null || y < miny) miny = y;
+        if (maxy == null || y > maxy) maxy = y;
+
         HashMap<Integer, T> row;
         if (putRow != null && y == py) {
             row = putRow;
