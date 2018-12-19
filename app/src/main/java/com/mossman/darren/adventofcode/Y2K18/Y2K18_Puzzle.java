@@ -22,5 +22,9 @@ public class Y2K18_Puzzle extends AOC_Puzzle {
         Y2K18_12.main(null);
         Y2K18_13.main(null);
         Y2K18_14.main(null);
+        Y2K18_15.main(null);
+        Y2K18_16.main(null);
+        Y2K18_17.main(null);
+        Y2K18_18.main(null);
     }
 }
