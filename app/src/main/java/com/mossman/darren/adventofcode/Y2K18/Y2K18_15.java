@@ -69,29 +69,14 @@ public class Y2K18_15 extends Y2K18_Puzzle {
 
         //--------------------------------------------------------------------------------------
 
-/*
-        puzzle = new Y2K18_15(false, 1);
-        i = puzzle.part1();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
-        test(i, 245280);
-
-        i = puzzle.part2();
-        dt1 = new Date();
-        System.out.printf("%d seconds\n", (dt1.getTime() - dt0.getTime()) / 1000); dt0 = dt1;
-        System.out.printf("day 15: part 2 = %d\n", i);
-        test(i, 74984);
-*/
-
         puzzle = new Y2K18_15(false, 0);
         i = puzzle.part1();
         System.out.printf("day 15: part 1 = %d\n", i);
-        test(i, 243390);
+        //test(i, 243390);
 
         i = puzzle.part2();
         System.out.printf("day 15: part 2 = %d\n", i);
-        // Part 2 is failing. Assume algorithm in part 1 has error which is only exercised with higher Elf hitpoints
-        test(i, 0);
+        //test(i, 59886);
     }
 
     //--------------------------------------------------------------------------------------------
@@ -402,37 +387,16 @@ public class Y2K18_15 extends Y2K18_Puzzle {
     }
 
     public Integer part2(boolean debug) {
-        int minPower = 4;
-        int maxPower = 100;
-        HashMap<Integer, Integer> score = new HashMap<>();
-        int res = 0;
-        Integer minSuccess = null;
-        while (maxPower - minPower > 1) {
-            elfAttackPower = (maxPower + minPower) / 2;
-            int sc = part1(debug, true);
-            score.put(elfAttackPower, sc);
-            if (sc > 0) {
-                if (minSuccess == null || elfAttackPower < minSuccess) {
-                    res = sc;
-                    minSuccess = elfAttackPower;
-                }
-                maxPower = elfAttackPower;
-            } else {
-                minPower = elfAttackPower;
-            }
-        }
-        if (score.get(minPower) == null) {
-            elfAttackPower = minPower;
+
+        elfAttackPower = 4;
+        while (true) {
             int sc = part1(debug, true);
             if (sc > 0) {
-                if (minSuccess == null || elfAttackPower < minSuccess) {
-                    res = sc;
-                    minSuccess = elfAttackPower;
-                }
+                System.out.printf("Minimum Elf attack power = %d\n", elfAttackPower);
+                return sc;
             }
+            elfAttackPower++;
         }
-        System.out.printf("Minimum Elf attack power = %d\n", minSuccess);
-        return res;
     }
 
     public Integer part1(boolean debug, boolean part2) {
