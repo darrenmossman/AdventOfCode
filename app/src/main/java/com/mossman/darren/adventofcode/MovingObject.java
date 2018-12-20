@@ -1,11 +1,16 @@
 package com.mossman.darren.adventofcode;
 
+import static com.mossman.darren.adventofcode.MovingObject.Direction.up;
+
 public class MovingObject {
 
-    public enum Direction {up, right, down, left};
+    public static enum Direction {up, right, down, left};
 
-    public int x, y;
-    public Direction dir;
+    public int x = 0, y = 0;
+    public Direction dir = up;
+
+    public MovingObject() {
+    }
 
     public MovingObject(int x, int y, Direction dir) {
         this.x = x;
