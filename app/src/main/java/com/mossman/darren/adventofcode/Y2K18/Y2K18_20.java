@@ -12,10 +12,6 @@ public class Y2K18_20 extends Y2K18_Puzzle {
         Y2K18_20 puzzle;
         int i;
 
-        //puzzle = new Y2K18_20("^ENWWW(NEEE|SSE(EE|N))$");
-        //i = puzzle.part1();
-        //test(i, 0);
-
         puzzle = new Y2K18_20("^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$");
         i = puzzle.part1();
         test(i, 23);
@@ -24,16 +20,14 @@ public class Y2K18_20 extends Y2K18_Puzzle {
         i = puzzle.part1();
         test(i, 31);
 
-
-
         puzzle = new Y2K18_20(false);
         i = puzzle.part1();
         System.out.printf("day 20: part 1 = %d\n", i);
-        test(i, 4108);
+        //test(i, 4108);
 
         i = puzzle.part2();
         System.out.printf("day 20: part 2 = %d\n", i);
-        test(i, 8366);
+        //test(i, 8366);
     }
 
     //--------------------------------------------------------------------------------------------
@@ -143,6 +137,9 @@ public class Y2K18_20 extends Y2K18_Puzzle {
     }
 
     public int part1() {
+        return part1(false);
+    }
+    public int part1(boolean part2) {
 
         grid = new InfiniteGrid<>(' ');
         count = new InfiniteGrid<>();
@@ -152,14 +149,16 @@ public class Y2K18_20 extends Y2K18_Puzzle {
         int pos = 1;
         branch(pos);
 
-        fillWalls();
-        outputGrid();
+        if (!part2) {
+            fillWalls();
+            outputGrid();
+        }
 
         return maxCount;
     }
 
     public int part2() {
-        part1();
+        part1(true);
 
         int res = 0;
         for (int y = count.miny; y <= count.maxy; y++) {
