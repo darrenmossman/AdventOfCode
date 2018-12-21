@@ -68,8 +68,14 @@ public class Y2K18_15 extends Y2K18_Puzzle {
         test(i, 1140);
 
         //--------------------------------------------------------------------------------------
+        /*
+        puzzle = new Y2K18_15(false, 2);
+        i = puzzle.part2();
+        test(i, 42224);
+        */
 
-        puzzle = new Y2K18_15(false, 0);
+
+        puzzle = new Y2K18_15(false);
         i = puzzle.part1();
         System.out.printf("day 15: part 1 = %d\n", i);
         //test(i, 243390);
@@ -387,7 +393,6 @@ public class Y2K18_15 extends Y2K18_Puzzle {
     }
 
     public Integer part2(boolean debug) {
-
         elfAttackPower = 4;
         while (true) {
             int sc = part1(debug, true);
@@ -447,8 +452,16 @@ public class Y2K18_15 extends Y2K18_Puzzle {
                         }
                     } else if (unit.attackTarget == null) {
                         Node node = unit.getShortestPath(target);
-                        if (node != null && (unit.shortestPath == null || node.dist < unit.shortestPath.dist)) {
-                            unit.shortestPath = node;
+                        if (node != null) {
+                            if (unit.shortestPath == null || node.dist < unit.shortestPath.dist) {
+                                unit.shortestPath = node;
+                            } else if (node.dist == unit.shortestPath.dist)  {
+                                if (node.y < unit.shortestPath.y ||
+                                    node.y == unit.shortestPath.y && node.x < unit.shortestPath.x)
+                                {
+                                    unit.shortestPath = node;
+                                }
+                            }
                         }
                     }
                 }
