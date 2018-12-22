@@ -143,18 +143,6 @@ public class Y2K18_22 extends Y2K18_Puzzle {
         return totalRisk;
     }
 
-    private String regionTypeString(RegionType type) {
-        if (type == rocky) return "rocky";
-        else if (type == wet) return "wet";
-        else return "narrow";
-    }
-
-    private String equipmentString(Equipment equipment) {
-        if (equipment == climbing) return "climbing";
-        else if (equipment == torch) return "torch";
-        else return "none";
-    }
-
     private class Node implements Comparable<Node> {
         int x, y;
         Region region;
@@ -164,7 +152,7 @@ public class Y2K18_22 extends Y2K18_Puzzle {
 
         public String toString() {
             return String.format("%3d - (%d,%d) - %s - %s", dist, x, y,
-                    regionTypeString(region.type), equipmentString(equipment));
+                    region.type.toString(), equipment.toString());
         }
 
         private Node(int x, int y, Equipment equipment) {
