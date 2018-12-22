@@ -16,13 +16,13 @@ public class Y2K18_21 extends Y2K18_Puzzle {
         puzzle = new Y2K18_21(false);
         i = puzzle.part1();
         l = System.currentTimeMillis() - l;
-        System.out.printf("day 22: part 1 = %d, %d milliseconds\n", i, l);
+        System.out.printf("day 21: part 1 = %d, %d milliseconds\n", i, l);
         //test(i, 12980435);
 
         l = System.currentTimeMillis();
         i = puzzle.part2();
         l = (System.currentTimeMillis() - l) / 1000L;
-        System.out.printf("day 22: part 2 = %d, %d seconds\n", i, l);
+        System.out.printf("day 21: part 2 = %d, %d seconds\n", i, l);
         //test(i, 14431711);
     }
 
