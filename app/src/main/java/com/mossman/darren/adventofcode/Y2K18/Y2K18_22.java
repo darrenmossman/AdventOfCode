@@ -29,14 +29,19 @@ public class Y2K18_22 extends Y2K18_Puzzle {
         i = puzzle.part2();
         test(i, 45);
 
+        long l;
+        l = System.currentTimeMillis();
         puzzle = new Y2K18_22(8787, 10, 725);
         i = puzzle.part1();
-        System.out.printf("day 22: part 1 = %d\n", i);
-        test(i, 8090);
+        l = System.currentTimeMillis() - l;
+        System.out.printf("day 22: part 1 = %d, %d milliseconds\n", i, l);
+        //test(i, 8090);
 
+        l = System.currentTimeMillis();
         i = puzzle.part2();
-        System.out.printf("day 22: part 2 = %d\n", i);
-        test(i, 0);
+        l = (System.currentTimeMillis() - l) / 1000L;
+        System.out.printf("day 21: part 2 = %d, %d seconds\n", i, l);
+        //test(i, 992);
     }
 
     //--------------------------------------------------------------------------------------------
@@ -45,14 +50,11 @@ public class Y2K18_22 extends Y2K18_Puzzle {
     private int tx, ty;
     private InfiniteGrid<Region> map;
     private int totalRisk;
-    //private InfiniteGrid<Node> gridC;
-    //private InfiniteGrid<Node> gridT;
-    //private InfiniteGrid<Node> gridN;
 
     enum RegionType {rocky, wet, narrow}
     enum Equipment {climbing, torch, none};
 
-    private HashMap<Equipment, InfiniteGrid<Node>> grid;
+    private HashMap<Equipment, InfiniteGrid<Node>> grids;
 
     private class Region {
         int x, y;
@@ -165,7 +167,7 @@ public class Y2K18_22 extends Y2K18_Puzzle {
                     regionTypeString(region.type), equipmentString(equipment));
         }
 
-        private Node(int x, int y, InfiniteGrid<Node> grid) {
+        private Node(int x, int y, Equipment equipment) {
             Region region = map.get(x, y);
             if (region == null) {
                 region = new Region(x, y);
@@ -173,14 +175,10 @@ public class Y2K18_22 extends Y2K18_Puzzle {
             this.x = region.x;
             this.y = region.y;
             this.region = region;
-            if (grid == gridC) {
-                this.equipment = climbing;
-            } else if (grid == gridT) {
-                this.equipment = torch;
-            } else {
-                this.equipment = none;
-            }
+            this.equipment = equipment;
             this.dist = Integer.MAX_VALUE;
+
+            InfiniteGrid<Node> grid = grids.get(equipment);
             grid.put(x, y, this);
         }
 
@@ -192,8 +190,11 @@ public class Y2K18_22 extends Y2K18_Puzzle {
             Node node = this;
             Equipment equipment = torch;
             int cnt = 0;
+            int mx = 0, my = 0;
             int i = 0;
             while (node.previous != null) {
+                if (node.x > mx) mx = node.x;
+                if (node.y > my) my = node.y;
                 if (node.equipment != equipment) {
                     equipment = node.equipment;
                     cnt++;
@@ -214,53 +215,64 @@ public class Y2K18_22 extends Y2K18_Puzzle {
                 System.out.printf("%3d, %2d : %s\n", i, cnt, node.toString());
                 node = node.previous;
             }
+            System.out.printf("Max = (%d, %d)\n", mx, my);
             System.out.flush();
         }
 
         private ArrayList<Node> getAdjacents() {
             ArrayList<Node> adjacents = new ArrayList<>();
-            getAdjacents(adjacents, gridC);
-            getAdjacents(adjacents, gridT);
-            getAdjacents(adjacents, gridN);
+            getAdjacents(adjacents, climbing);
+            getAdjacents(adjacents, torch);
+            getAdjacents(adjacents, none);
             return adjacents;
         }
 
-        private void getAdjacents(ArrayList<Node> adjacents, InfiniteGrid<Node> grid) {
-            Node node;
+        private void getAdjacents(ArrayList<Node> adjacents, Equipment equipment) {
+            /* sz sets how much farther beyong the X and Y of target to search in each direction
+             * Given layout of regions there does not seem much value in searching farther away
+             * If solution is not correct then increasing sz to 50 should give correct solution, more slowly.
+             */
             final int sz = 20;
+
+            InfiniteGrid<Node> grid = grids.get(equipment);
+            Node node;
+
             if (y > 0) {
-                node = grid.get(x, y-1);               // above
-                if (node == null) node = new Node(x, y-1, grid);
+                node = grid.get(x, y-1);                // above
+                if (node == null) node = new Node(x, y-1, equipment);
                 adjacents.add(node);
             }
             if (y < ty + sz) {
-                node = grid.get(x, y+1);                   // below
-                if (node == null) node = new Node(x, y+1, grid);
+                node = grid.get(x, y+1);                // below
+                if (node == null) node = new Node(x, y+1, equipment);
                 adjacents.add(node);
             }
 
             if (x > 0) {
-                node = grid.get(x-1, y);               // left
-                if (node == null) node = new Node(x-1, y, grid);
+                node = grid.get(x-1, y);                // left
+                if (node == null) node = new Node(x-1, y, equipment);
                 adjacents.add(node);
             }
             if (x < tx + sz) {
-                node = grid.get(x+1, y);                   // right
-                if (node == null) node = new Node(x+1, y, grid);
+                node = grid.get(x+1, y);                // right
+                if (node == null) node = new Node(x+1, y, equipment);
                 adjacents.add(node);
             }
         }
     }
+
     private Node getPath() {
 
-        gridC = new InfiniteGrid<Node>();
-        gridT = new InfiniteGrid<Node>();
-        gridN = new InfiniteGrid<Node>();
+        // Find shortest path using Djikstra's algorithm using 3 node grids containing all possible position states
+        grids = new HashMap<>();
+        grids.put(climbing, new InfiniteGrid<Node>());
+        grids.put(torch, new InfiniteGrid<Node>());
+        grids.put(none, new InfiniteGrid<Node>());
 
         List<Node> unvisited = new ArrayList<>();
         List<Node> visited = new ArrayList<>();
 
-        Node node = new Node(0, 0, gridT);
+        Node node = new Node(0, 0, torch);
         node.dist = 0;
         unvisited.add(node);
 
@@ -275,37 +287,34 @@ public class Y2K18_22 extends Y2K18_Puzzle {
 
             ArrayList<Node> adjacents = node.getAdjacents();
             for (Node nd: adjacents) {
+                if ((nd.region.type == rocky && nd.equipment == none) ||
+                    (nd.region.type == narrow && nd.equipment == climbing) ||
+                    (nd.region.type == wet && nd.equipment == torch) ||
+                    (nd.x == tx && nd.y == ty && nd.equipment != torch))
+                {
+                    // remove impossible combinations first
+                    unvisited.remove(nd);
+                    continue;
+                }
+
                 if (!visited.contains(nd) && !unvisited.contains(nd)) {
                     visited.add(nd);
                     unvisited.add(nd);
                 }
                 if (unvisited.contains(nd)) {
-                    if (nd.x == tx && nd.y == ty) {
-                        if (nd.equipment != torch) {
-                            unvisited.remove(nd);
-                            continue;
-                        }
-                    }
-                    else if (nd.region.type == node.region.type && nd.equipment != node.equipment) {
-                        //unvisited.remove(nd);
-                        continue;
-                    }
-                    if ((nd.region.type == rocky && nd.equipment == none) |
-                            (nd.region.type == narrow && nd.equipment == climbing) |
-                            (nd.region.type == wet && nd.equipment == torch))
+                    if ((nd.region.type == node.region.type && nd.equipment != node.equipment) &&
+                        (nd.x != tx || nd.y != ty))
                     {
-                        unvisited.remove(nd);
+                        // don't change equipment if region doesn't change, unless at target
                         continue;
                     }
-
-                    if ((node.region.type == rocky && nd.equipment == none) |
-                            (node.region.type == narrow && nd.equipment == climbing) |
-                            (node.region.type == wet && nd.equipment == torch))
+                    if ((node.region.type == rocky && nd.equipment == none) ||
+                        (node.region.type == narrow && nd.equipment == climbing) ||
+                        (node.region.type == wet && nd.equipment == torch))
                     {
+                        // don't change equipment if current region does not allow it
                         continue;
                     }
-
-
 
                     int time = 1;
                     if (nd.equipment != node.equipment) {
@@ -326,7 +335,7 @@ public class Y2K18_22 extends Y2K18_Puzzle {
 
     public int part2() {
         Node node = getPath();
-        node.printPath();
+        //node.printPath();
         return node.dist;
     }
 }
