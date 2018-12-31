@@ -1,6 +1,6 @@
 # AdventOfCode
 Java solutions to Advent Of Code puzzles. 
-2017 complete, 2018 in-progress ... 2016 in-progress ...
+2017 complete, 2018 complete ... 2016 in-progress ...
 
 Solution classes are named `Y2K17_n` for 2017 Day n and `Y2K18_n` for 2018, etc.
 
