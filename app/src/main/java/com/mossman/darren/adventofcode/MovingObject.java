@@ -1,5 +1,8 @@
 package com.mossman.darren.adventofcode;
 
+import static com.mossman.darren.adventofcode.MovingObject.Direction.down;
+import static com.mossman.darren.adventofcode.MovingObject.Direction.left;
+import static com.mossman.darren.adventofcode.MovingObject.Direction.right;
 import static com.mossman.darren.adventofcode.MovingObject.Direction.up;
 
 public class MovingObject {
@@ -8,7 +11,11 @@ public class MovingObject {
 
     public int x = 0, y = 0;
     public Direction dir = up;
+    public char mark = ' ';
 
+    public MovingObject(char mark) {
+        this.mark = mark;
+    }
     public MovingObject() {
     }
 
@@ -19,6 +26,15 @@ public class MovingObject {
     }
 
     private static final Direction[] dirs = Direction.values();
+
+    public void setDir(char c) {
+        switch (Character.toLowerCase(c)) {
+            case 'u': dir = up; break;
+            case 'd': dir = down; break;
+            case 'l': dir = left; break;
+            case 'r': dir = right; break;
+        }
+    }
 
     public void turnLeft() {
         dir = dirs[dir.ordinal() == 0 ? dirs.length - 1 : dir.ordinal() - 1];

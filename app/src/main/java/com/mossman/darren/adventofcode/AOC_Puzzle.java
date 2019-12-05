@@ -3,6 +3,7 @@ package com.mossman.darren.adventofcode;
 import com.mossman.darren.adventofcode.Y2K16.Y2K16_Puzzle;
 import com.mossman.darren.adventofcode.Y2K17.Y2K17_Puzzle;
 import com.mossman.darren.adventofcode.Y2K18.Y2K18_Puzzle;
+import com.mossman.darren.adventofcode.Y2K19.Y2K19_Puzzle;
 
 public abstract class AOC_Puzzle {
 
@@ -11,6 +12,7 @@ public abstract class AOC_Puzzle {
         Y2K16_Puzzle.main(null);
         Y2K17_Puzzle.main(null);
         Y2K18_Puzzle.main(null);
+        Y2K19_Puzzle.main(null);
     }
 
     //--------------------------------------------------------------------------------------------

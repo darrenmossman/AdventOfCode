@@ -22,7 +22,7 @@ public class Y2K16_4 extends Y2K18_Puzzle {
 
         i = puzzle.run(true);
         System.out.printf("day 4: part 2 = %d\n", i);
-        test(i, 0);
+        test(i, 324);
     }
 
     //--------------------------------------------------------------------------------------------
