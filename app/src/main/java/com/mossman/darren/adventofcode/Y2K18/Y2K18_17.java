@@ -1,7 +1,5 @@
 package com.mossman.darren.adventofcode.Y2K18;
 
-import android.util.Pair;
-
 import com.mossman.darren.adventofcode.InfiniteGrid;
 import com.mossman.darren.adventofcode.MovingObject;
 import com.mossman.darren.adventofcode.Utils;
