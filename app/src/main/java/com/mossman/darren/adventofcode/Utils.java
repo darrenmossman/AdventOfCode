@@ -11,6 +11,10 @@ import java.util.Arrays;
 
 public class Utils {
 
+    public static String reverse(String s) {
+        return new StringBuilder(s).reverse().toString();
+    }
+
     public static boolean isAnagram(String s1, String s2) {
         char[] c1 = s1.toCharArray();
         char[] c2 = s2.toCharArray();
