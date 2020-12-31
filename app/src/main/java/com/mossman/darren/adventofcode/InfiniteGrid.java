@@ -123,4 +123,16 @@ public class InfiniteGrid<T> {
         return data.size();
     }
 
+    public void display() {
+        for (int r = 0; r < size(); r++) {
+            HashMap<Integer, T> row = getRow(r);
+            StringBuilder builder = new StringBuilder();
+            for (int c = 0; c < row.size(); c++) {
+                builder.append(row.get(c));
+            }
+            System.out.printf("%s\n", builder.toString());
+        }
+    }
+
+
 }
