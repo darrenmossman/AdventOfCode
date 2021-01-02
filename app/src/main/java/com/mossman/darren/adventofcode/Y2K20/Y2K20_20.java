@@ -17,16 +17,16 @@ public class Y2K20_20 extends Y2K18_Puzzle {
 
         Y2K20_20 puzzle = new Y2K20_20(true);
         long i = puzzle.part1();
-        System.out.printf("day 1: part 1a = %d\n", i);
+        System.out.printf("day 20: part 1a = %d\n", i);
         test(i, 20899048083289L);
 
         puzzle = new Y2K20_20(false);
         i = puzzle.part1();
-        System.out.printf("day 1: part 1b = %d\n", i);
+        System.out.printf("day 20: part 1b = %d\n", i);
         test(i, 21599955909991L);
 
         i = puzzle.part2();
-        System.out.printf("day 1: part 2 = %d\n", i);
+        System.out.printf("day 20: part 2 = %d\n", i);
         test(i, 2495);
 
     }
